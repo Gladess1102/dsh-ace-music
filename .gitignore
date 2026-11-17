@@ -24,3 +24,6 @@ segs/
 # Editor
 .vscode/
 .idea/
+
+# npm pack output
+*.tgz

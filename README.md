@@ -35,11 +35,11 @@ Signing in costs nothing. A free account can do everything except download the a
 ## Install
 
 ```bash
-# from GitHub (works today)
-dsh plugin --profile <your-profile> add github:Gladess1102/dsh-ace-music
-
-# from npm — once the package is published
+# from npm
 dsh plugin --profile <your-profile> add dsh-ace-music
+
+# or straight from GitHub
+dsh plugin --profile <your-profile> add github:Gladess1102/dsh-ace-music
 ```
 
 Then in DSH: **Plugins** → **Add plugin** → point at the installed package, or restart — the bundle patch activates on load.

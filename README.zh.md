@@ -35,11 +35,11 @@
 ## 安装
 
 ```bash
-# 从 GitHub 安装（现在就能用）
-dsh plugin --profile <你的 profile> add github:Gladess1102/dsh-ace-music
-
-# 从 npm 安装——包发布之后
+# 从 npm 安装
 dsh plugin --profile <你的 profile> add dsh-ace-music
+
+# 或者直接从 GitHub 安装
+dsh plugin --profile <你的 profile> add github:Gladess1102/dsh-ace-music
 ```
 
 装完在 DSH 里：**插件** → **添加插件**，或重启即可——bundle patch 在加载时生效。

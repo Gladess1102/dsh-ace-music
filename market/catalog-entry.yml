@@ -1,0 +1,6 @@
+url: https://github.com/Gladess1102/dsh-ace-music
+name: Gladess1102/dsh-ace-music
+category: voice
+description:
+  en: 'ACE Music MCP server for DSH: signs in with your own account over OAuth (dynamic client registration, PKCE, loopback callback, automatic token refresh) and bridges the remote server''s ten tools to native acemusic_* tools — write a whole song from style and lyrics, continue a melody from an ABC or MIDI opening, upload audio for transcription, poll song status, page through the library, and download tracks on paid plans. It exists because @deepseek-ai/dsh-mcp-client supplies only static request headers and cannot answer the OAuth challenge on acemusic.ai/mcp. Zero runtime dependencies.'
+  zh: '把 ACE Music 的 MCP 服务器接进 DSH：用你自己的账号走 OAuth 登录（动态客户端注册、PKCE、回环回调、自动续期），再把远端十个工具桥接成原生 acemusic_* 工具——按风格与歌词写一整首歌、用 ABC 或 MIDI 开头续写旋律、上传音频自动转写、轮询歌曲状态、分页浏览曲库、付费档下载成品。它存在的理由：@deepseek-ai/dsh-mcp-client 只附加静态请求头，应答不了 acemusic.ai/mcp 的 OAuth 挑战。零运行时依赖。'

@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="ACE Music">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ff7a45"/>
+      <stop offset="1" stop-color="#e0345b"/>
+    </linearGradient>
+    <linearGradient id="bar" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset="1" stop-color="#ffe6dc"/>
+    </linearGradient>
+  </defs>
+  <rect x="2" y="2" width="60" height="60" rx="15" fill="url(#bg)"/>
+  <!-- 音频柱 -->
+  <g fill="url(#bar)">
+    <rect x="15" y="26" width="5" height="14" rx="2.5"/>
+    <rect x="24" y="19" width="5" height="28" rx="2.5"/>
+    <rect x="33" y="23" width="5" height="20" rx="2.5"/>
+    <rect x="42" y="15" width="5" height="34" rx="2.5"/>
+  </g>
+  <!-- 桥接节点：右上角的连接点 -->
+  <circle cx="49" cy="15" r="6" fill="#ffffff"/>
+  <circle cx="49" cy="15" r="3" fill="url(#bg)"/>
+</svg>

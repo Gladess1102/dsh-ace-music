@@ -1,0 +1,10 @@
+# dsh-ace-music —— 一行 Host 插件。
+#
+# 本插件自己完成 OAuth（动态注册 + PKCE + 本地回调 + 令牌续期），
+# 再用 Bearer 令牌把 https://acemusic.ai/mcp 的远端工具桥接成 acemusic_* 工具。
+# 因此这里只插入自己的插件行，不挂 @deepseek-ai/dsh-mcp-client
+# （那条路径只支持静态请求头，过不了 acemusic 的 OAuth 挑战）。
+- insert:
+    - id: ace-music
+      name: dsh-ace-music
+      config: {}

@@ -1,0 +1,59 @@
+{
+  "name": "dsh-ace-music",
+  "version": "0.1.0",
+  "description": "ACE Music MCP server for DeepSeek Harness: OAuth sign-in once, then write songs, continue a melody, upload audio, inspect and download tracks as native acemusic_* tools. Fills the OAuth gap in dsh-mcp-client.",
+  "keywords": [
+    "deepseek-harness",
+    "dsh",
+    "dsh-plugin",
+    "mcp",
+    "oauth",
+    "music",
+    "ace-music",
+    "song-generation"
+  ],
+  "license": "MIT",
+  "author": "Gladess1102",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Gladess1102/dsh-ace-music.git"
+  },
+  "homepage": "https://github.com/Gladess1102/dsh-ace-music#readme",
+  "bugs": {
+    "url": "https://github.com/Gladess1102/dsh-ace-music/issues"
+  },
+  "private": false,
+  "type": "module",
+  "main": "./index.js",
+  "exports": {
+    ".": "./index.js",
+    "./locale/*.json": "./locale/*.json",
+    "./icon": "./icon.svg",
+    "./package.json": "./package.json"
+  },
+  "engines": {
+    "node": ">=20",
+    "dsh": ">=0.2.0-rc.1 <0.3.0-0"
+  },
+  "files": [
+    "index.js",
+    "src",
+    "locale",
+    "docs",
+    "icon.svg",
+    "cordis.patch.yml",
+    "README.md",
+    "README.zh.md",
+    "CHANGELOG.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "check": "node --check index.js && node --check src/net.js && node --check src/oauth.js && node --check src/mcp.js",
+    "plugincheck": "node --check index.js && test -f cordis.patch.yml && test -f locale/zh.json && test -f icon.svg"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  }
+}

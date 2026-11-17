@@ -1,0 +1,26 @@
+# Dependencies
+node_modules/
+package-lock.json
+pnpm-lock.yaml
+yarn.lock
+
+# Local runtime state (never commit credentials)
+*.log
+.DS_Store
+.env
+.env.*
+credentials.json
+ace-music/
+
+# Generated media and scratch work
+tracks/
+segs/
+*.mp3
+*.wav
+*.png
+!docs/preview.png
+!icon.svg
+
+# Editor
+.vscode/
+.idea/

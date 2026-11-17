@@ -1,0 +1,7 @@
+{
+  "meta": {
+    "title": "ACE Music",
+    "description": "用自然语言写歌：OAuth 登录 ACE Music 后，写歌、续写旋律、上传音频、查歌、下载成品都成为 acemusic_* 工具。",
+    "detail": "docs/DETAIL.md"
+  }
+}

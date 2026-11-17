@@ -49,7 +49,8 @@
   ],
   "scripts": {
     "check": "node --check index.js && node --check src/net.js && node --check src/oauth.js && node --check src/mcp.js",
-    "plugincheck": "node --check index.js && test -f cordis.patch.yml && test -f locale/zh.json && test -f icon.svg"
+    "plugincheck": "node --check index.js && test -f cordis.patch.yml && test -f locale/zh.json && test -f icon.svg",
+    "test": "node --test \"test/*.test.mjs\""
   },
   "dsh": {
     "bundle": {

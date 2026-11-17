@@ -170,6 +170,7 @@ If the system resolver fails on `acemusic.ai` (some VPN and split-DNS setups do)
 ## Development
 
 ```bash
+npm test         # 8 cases over the MusicXML converter
 npm run check    # syntax check every module
 ```
 

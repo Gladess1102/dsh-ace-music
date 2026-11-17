@@ -170,6 +170,7 @@ DSH 自带的 `@deepseek-ai/dsh-mcp-client` 只会附加静态请求头（`creat
 ## 开发
 
 ```bash
+npm test         # MusicXML 转换器的 8 个用例
 npm run check    # 逐模块语法检查
 ```
 

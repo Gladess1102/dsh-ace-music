@@ -1,7 +1,7 @@
 {
   "meta": {
     "title": "ACE Music",
-    "description": "用自然语言写歌：OAuth 登录 ACE Music 后，写歌、续写旋律、上传音频、查歌、下载成品都成为 acemusic_* 工具。",
+    "description": "用自然语言写歌：OAuth 登录 ACE Music 后，写歌、按谱续写旋律、上传音频、查歌与下载都成为 acemusic_* 工具（AA 人声榜第一的模型）。",
     "detail": "docs/DETAIL.md"
   }
 }

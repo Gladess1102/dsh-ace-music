@@ -1,7 +1,7 @@
 {
   "meta": {
     "title": "ACE Music",
-    "description": "Write songs by conversation: once signed in over OAuth, creating songs, continuing a melody, uploading audio, checking and downloading tracks all become acemusic_* tools.",
+    "description": "Write songs by conversation: after an OAuth sign-in to ACE Music, creating songs, continuing a melody from a score, uploading audio, checking and downloading tracks all become acemusic_* tools.",
     "detail": "docs/DETAIL.md"
   }
 }

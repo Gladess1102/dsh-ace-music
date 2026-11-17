@@ -75,7 +75,7 @@ Ten tools are bridged from the remote server and registered as `acemusic_*`:
 | `acemusic_show_upgrade` | Upgrade card — plain text in DSH. |
 | `acemusic_get_account` | Plan, credits, refill schedule, upload minutes, available models. |
 
-Plus five management tools:
+Plus six local tools:
 
 | Tool | What it does |
 |---|---|
@@ -84,6 +84,7 @@ Plus five management tools:
 | `acemusic_logout` | Delete the stored token. |
 | `acemusic_tools` | Re-fetch the remote tool list and register it (idempotent). |
 | `acemusic_call` | Escape hatch: call any remote tool by name with raw JSON arguments. |
+| `acemusic_score` | Convert MusicXML into ACE's ABC dialect, ready for `create_song`'s `score.abc`. |
 
 ## Bundled writing guides
 
@@ -97,6 +98,41 @@ The four guides ACE Music publishes through `get_skill` ship inside this package
 | `score-format.md` | Writing or editing ABC notation, and how MIDI is read |
 
 `acemusic_get_skill` returns the local copy first, so the model can consult the rules with no network round trip; the reply says so, and points at `acemusic_call` if you want the live version. Their text belongs to ACE Music (© Timedomain, Inc.) and is cached here verbatim — only this project's code is MIT.
+
+## MusicXML as the writing layer
+
+ACE Music's MCP endpoint takes a score as **ABC or MIDI only** — yet its web app accepts `.musicxml`, `.xml` and `.mxl` (Idea → Sing sheet music, on ACE Music v1.1 Preview). That path is closed to an agent, which has no file-upload equivalent over MCP.
+
+So the split this plugin settles on: **write in MusicXML, deliver in ABC.**
+
+MusicXML is the better format for a model to compose in. Pitch lives in `<pitch>`, duration in `<duration>`, harmony in `<harmony>`, words in `<lyric>`; a bar is a `<measure>` you can add one at a time, and a bar whose durations do not add up to the meter is detectable by code. Compared with ABC, you are far less likely to write a chord as a note, or lose a beat without noticing.
+
+`acemusic_score` performs the conversion:
+
+| MusicXML | ABC |
+|---|---|
+| part with `<lyric>` | `V: Vocal` |
+| other part | `V: Ins` (ACE accepts only these two lines) |
+| `<note>` with `<chord/>` | top note only |
+| `<harmony>` | `"Dm"` / `"F/A"` chord symbols |
+| `<direction><rehearsal>` | `% verse`, `% chorus` … |
+| `divisions` + `duration` | ACE's `L:1/16` units, falling back to `1/32` |
+| `alter` | `^` sharp, `_` flat |
+
+Two things bite. **Sections must match exactly**: the count and order of `% <section>` markers must equal the `[section]` tags in the lyrics, or ACE answers `score_invalid` and charges nothing. **Only two voices exist**: a layered choir cannot be notated as four parts — write the top line, and describe the harmony in the style. The full contract and the traps are in [docs/musicxml.md](docs/musicxml.md).
+
+Measured on the reference piece — 46 bars, 72 BPM, D minor, female choir, `acemusic-v1.1`:
+
+| Section | low band <200 Hz | RMS |
+|---|---|---|
+| intro | 6.4% | −24.3 dB |
+| verse | 4.7% | −20.9 dB |
+| chorus | 6.9% | −17.5 dB |
+| **bridge (marked a cappella)** | **1.4%** | −22.0 dB |
+| final chorus | 7.9% | −17.0 dB |
+| outro | 1.5% | −29.8 dB |
+
+Section structure, the dynamic arc and the a cappella drop all survived the trip from MusicXML to audio; the printed length (153 s) matched the render (157–160 s).
 
 ## Why this is a plugin at all
 

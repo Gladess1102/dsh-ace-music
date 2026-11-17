@@ -43,6 +43,17 @@
 - 登录回调占用本机 `127.0.0.1:8765`；被占用时用环境变量 `ACE_MUSIC_PORT` 换端口后重新登录。
 - `acemusic_show_songs` / `acemusic_show_upgrade` 的卡片是给 Claude、ChatGPT 一类客户端设计的，在 DSH 里只返回文本，没有播放器。
 
+## MusicXML 写谱
+
+ACE 的 MCP 只收 ABC 或 MIDI，但网页端收 `.musicxml` / `.xml` / `.mxl`。`acemusic_score` 把
+MusicXML 转成 ACE 能唱的 ABC：保留一条人声线与一条器乐线，`<chord/>` 取最高音，`<harmony>`
+转成 `"Dm"` 和弦符号，`<rehearsal>` 转成 `% section`。
+
+⚠️ **段落数量与顺序必须与歌词里的 `[section]` 标签一致**，否则 ACE 返回 `score_invalid`
+（不扣费）。合唱等多声部意图无法写进谱（只有 `Vocal` / `Ins` 两条线），要写进 style。
+
+完整契约、最小元素子集与常见坑见 `docs/musicxml.md`。
+
 ## 远端协议（实现依据）
 
 - **端点**：`https://acemusic.ai/mcp`，只接受 POST；GET 返回 405。传输是 Streamable HTTP。

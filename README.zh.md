@@ -75,7 +75,7 @@ acemusic_status
 | `acemusic_show_upgrade` | 升级卡——DSH 里返回纯文本。 |
 | `acemusic_get_account` | 套餐、积分、补充计划、上传分钟、可用模型。 |
 
-另有五个管理工具：
+另有六个本地工具：
 
 | 工具 | 作用 |
 |---|---|
@@ -84,6 +84,7 @@ acemusic_status
 | `acemusic_logout` | 删除本机令牌。 |
 | `acemusic_tools` | 重新拉取远端工具并注册（幂等）。 |
 | `acemusic_call` | 兜底通道：按名字直接调任意远端工具，参数用原始 JSON。 |
+| `acemusic_score` | 把 MusicXML 转成 ACE 的 ABC 方言，直接用于 `create_song` 的 `score.abc`。 |
 
 ## 内置的官方写作规范
 
@@ -97,6 +98,41 @@ ACE Music 通过 `get_skill` 公开的四份规范，随本包存放在 `docs/sk
 | `score-format.md` | 写或改 ABC 记谱，以及 MIDI 怎么被读 |
 
 `acemusic_get_skill` 会**优先返回本地副本**，模型不必先联网取一次就能读到规则；返回里也写明了这一点，并指向 `acemusic_call` 以便取远端最新版。这些文本的作者是 ACE Music（© Timedomain, Inc.），此处原样缓存；MIT 只覆盖本项目的代码。
+
+## MusicXML 作为写谱层
+
+ACE Music 的 MCP 端点只收 **ABC 或 MIDI**，但它的网页端收 `.musicxml`、`.xml`、`.mxl`（Idea → Sing sheet music，走 ACE Music v1.1 Preview）。这条路径 agent 走不了——MCP 没有等价的上传入口。
+
+所以本插件的分工是：**用 MusicXML 作曲，用 ABC 交付。**
+
+MusicXML 更适合模型写谱：音高在 `<pitch>`、时值在 `<duration>`、和声在 `<harmony>`、歌词在 `<lyric>`，一小节就是一个 `<measure>`，可以逐节增量生成；而一小节里时值加起来不等于拍号，是能用代码查出来的。相比 ABC，你更不容易把和弦写成音符，或者少算一拍却没发现。
+
+`acemusic_score` 负责转换：
+
+| MusicXML | ABC |
+|---|---|
+| 带 `<lyric>` 的 part | `V: Vocal` |
+| 其他 part | `V: Ins`（ACE 只认这两条线） |
+| `<note>` 带 `<chord/>` | 只取最高音 |
+| `<harmony>` | `"Dm"` / `"F/A"` 和弦符号 |
+| `<direction><rehearsal>` | `% verse`、`% chorus`…… |
+| `divisions` + `duration` | ACE 的 `L:1/16` 单位，除不尽退 `1/32` |
+| `alter` | `^` 升、`_` 降 |
+
+两个坑。**段落必须完全对齐**：`% <section>` 的数量与顺序，必须等于歌词里 `[section]` 标签的数量与顺序，否则 ACE 返回 `score_invalid`（不扣费）。**只有两个声部**：四部合唱写不进谱里——写最高声部，和声意图写进 style。完整契约与踩过的坑见 [docs/musicxml.md](docs/musicxml.md)。
+
+在参考作品上的实测（46 小节、72 BPM、D 小调、女声合唱、`acemusic-v1.1`）：
+
+| 段落 | 低频 <200 Hz | RMS |
+|---|---|---|
+| intro | 6.4% | −24.3 dB |
+| verse | 4.7% | −20.9 dB |
+| chorus | 6.9% | −17.5 dB |
+| **bridge（谱标 a cappella）** | **1.4%** | −22.0 dB |
+| 终段 chorus | 7.9% | −17.0 dB |
+| outro | 1.5% | −29.8 dB |
+
+段落结构、动态起伏与那段 a cappella 都从 MusicXML 一路活到了音频里；谱面算出的 153 秒与实际 157–160 秒对得上。
 
 ## 为什么这必须是一个插件
 

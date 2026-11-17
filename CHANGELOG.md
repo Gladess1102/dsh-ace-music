@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.2.0 — 2026-11-18
+
+MusicXML support: write the score in MusicXML, deliver it as ABC.
+
+- New `src/musicxml.js`: a dependency-free MusicXML parser plus a converter to ACE's ABC dialect. Handles `<divisions>`/`<duration>` unit maths (falling back to `L:1/32` when a duration does not divide evenly), `<alter>` accidentals, `<chord/>` stacks (top note wins), `<harmony>` chord symbols, `<rehearsal>` section markers, and ties produced when a value has to be split into lengths ACE accepts.
+- New `acemusic_score` tool, so a model can turn `.musicxml`/`.xml` text or a local file into the exact ABC `create_song` wants.
+- Section markers are emitted as `% <name>` with the same count and order as the lyrics' `[section]` tags — ACE rejects a score otherwise (`score_invalid`, nothing charged).
+- `docs/musicxml.md`: the contract, the minimal element subset an agent needs, the conversion table, a pre-flight checklist, and the traps met in practice.
+- Measured on the reference piece (46 bars, 72 BPM, D minor female choir on `acemusic-v1.1`): section structure, the dynamic arc and an a cappella bridge all survived conversion — the bridge's low band measured 1.4% against 5–9% elsewhere, and the rendered length (157–160 s) matched the score's 153 s.
+
 ## 0.1.0 — 2026-11-18
 
 First public release.

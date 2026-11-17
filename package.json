@@ -1,16 +1,16 @@
 {
   "name": "dsh-ace-music",
-  "version": "0.1.0",
-  "description": "ACE Music MCP server for DeepSeek Harness: OAuth sign-in once, then write songs, continue a melody, upload audio, inspect and download tracks as native acemusic_* tools. Fills the OAuth gap in dsh-mcp-client.",
+  "version": "0.2.0",
+  "description": "ACE Music MCP server for DeepSeek Harness: OAuth sign-in once, then write songs, continue a melody, upload audio, inspect and download tracks as native acemusic_* tools. Includes a MusicXML-to-ABC converter so an agent can compose the score. Fills the OAuth gap in @deepseek-ai/dsh-mcp-client.",
   "keywords": [
     "deepseek-harness",
     "dsh",
     "dsh-plugin",
-    "mcp",
     "oauth",
-    "music",
     "ace-music",
-    "song-generation"
+    "song-generation",
+    "musicxml",
+    "score"
   ],
   "license": "MIT",
   "author": "Gladess1102",

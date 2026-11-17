@@ -17,6 +17,7 @@ import { execFile } from 'node:child_process'
 
 import { OAUTH, registerClient, beginAuthorization, startCallbackServer, exchangeCode, refreshToken } from './src/oauth.js'
 import { McpClient, renderToolResult } from './src/mcp.js'
+import { musicxmlToAbc } from './src/musicxml.js'
 
 export const name = 'dsh-ace-music'
 export const inject = ['tools']
@@ -278,6 +279,47 @@ export async function apply(ctx) {
       for (const dispose of remote.values()) { try { dispose() } catch { /* 已释放 */ } }
       remote.clear()
       return '已退出 ACE Music 登录，本机令牌已删除。'
+    },
+  }))
+
+  // ──────────────────────────── acemusic_score ──────────────────────────────
+  ctx.tools.register(defineTool({
+    name: 'acemusic_score',
+    description: [
+      '把 MusicXML 谱转成 ACE Music v1.1 能唱的 ABC 谱（create_song 的 score.abc）。',
+      '为什么需要它：ACE 的 MCP 只收 ABC 或 MIDI，而 MusicXML 才是适合模型逐小节写谱的格式——它结构规整、可校验，一个文件同时含音高、时值、歌词、和弦、力度与速度。',
+      '输入可以是 MusicXML 文本，也可以是一个本地 .musicxml / .xml 文件路径。',
+      '转换规则：只保留 V: Vocal（有歌词的旋律）与 V: Ins（器乐线）；<chord/> 堆叠取最高音；<harmony> 转成 "C" 和弦符号；段落由 <rehearsal> 推导成 % section，必须与歌词里的 [section] 标签同序同数，否则 ACE 会拒收。',
+      '转换后把返回的 ABC 原样传给 acemusic_create_song 的 score.abc，并让 lyrics 的段落标签与它一致。',
+    ].join('\n'),
+    parameters: {
+      musicxml: { type: 'string', required: true, description: 'MusicXML 文本（以 <?xml 或 <score-partwise 开头），或本地 .musicxml/.xml 文件路径' },
+      title: { type: 'string', description: '曲名；缺省取 MusicXML 里的 movement-title / work-title' },
+    },
+    output: textOut(),
+    async execute(args) {
+      const input = String(args.musicxml ?? '').trim()
+      if (!input) return '请提供 MusicXML 文本或文件路径。'
+      let xml = input
+      if (!/^<\?xml|^<score-partwise|^<score-timewise/i.test(input)) {
+        try { xml = await readFile(input, 'utf8') }
+        catch { return `既不是 MusicXML 文本，也读不到文件：${input.slice(0, 120)}` }
+      }
+      try {
+        const out = musicxmlToAbc(xml, { title: args.title })
+        const lines = [
+          `已转换：${out.voices} 个声部、${out.bars} 小节、${out.lyrics.length} 个歌词音节`,
+          out.sections.length ? `段落：${out.sections.join(' → ')}（歌词的 [section] 标签必须与此同序同数）` : '未检测到段落标记（<rehearsal>），歌词请不要带分段标签',
+          out.warnings.length ? `注意：${out.warnings.join('；')}` : '',
+          '',
+          '```abc',
+          out.abc,
+          '```',
+        ].filter((l) => l !== '')
+        return lines.join('\n')
+      } catch (err) {
+        return `转换失败：${err?.message ?? String(err)}`
+      }
     },
   }))
 
